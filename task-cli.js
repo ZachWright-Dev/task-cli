@@ -30,12 +30,6 @@ if (!fs.existsSync(path)) {
     fs.writeFileSync(path, "[]");
 }
 
-
-//Check if the arguments are valid
-
-
-
-
 switch(args[0].toLowerCase()) {
     case "add":
         console.log("Ran the add function")
