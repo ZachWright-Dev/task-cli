@@ -5,17 +5,10 @@ const fs = require('fs');
 const args = process.argv.slice(2); 
 const path = "./tasks.json"
 
-validArgs = ["add", "delete"]
 const validateArgs = (args) => {
     //Check if the arguments array exists and that it is populated by the user
     if (!args || args.length === 0){
         console.log("Must provide at least one arugment to use tool!");
-        process.exit(1);
-    }
-
-    //Check if the first argument is valid
-    if (!validArgs.includes(args[0])){
-        console.log("This is not a valid argument!")
         process.exit(1);
     }
 }
@@ -72,7 +65,7 @@ const deleteTask = (args) => {
     }
 
     //Get the array of javascript objects
-    tasks = readTasks();
+    const tasks = readTasks();
 
     const id = parseInt(args[1])
 
@@ -81,7 +74,28 @@ const deleteTask = (args) => {
     });
 
     writeTasks(newTasks);
+    console.log(`Deleted task with ID:${id}`)
+}
 
+const updateTask = (args) => {
+    //Run if not 3 args or second arg is not an int
+    if (args.length !== 3 || !Number.isInteger(parseInt(args[1], 10))){
+        console.log("Invalid usage of update Function");
+        process.exit(1);
+    }
+    
+    //New description for the update
+    const description = args[2]
+    const id = parseInt(args[1]);
+    
+    const tasks = readTasks();
+
+    const newTasks = tasks.map((task) => {
+        return task.id === id ? {...task, description: description} : task
+    });
+
+    writeTasks(newTasks);
+    console.log(`Updated task with ID:${id}`)
 }
 
 const readTasks = () => {
@@ -111,13 +125,17 @@ switch(args[0].toLowerCase()) {
         console.log("Ran the update function")
         deleteTask(args);
         break;
-    default:
-        console.log("Did nothing here ");
+    case "update":
+        console.log("Ran the update function")
+        updateTask(args);
         break;
+    case "mark-in-progress":
+        markProgess(args);
+        break;
+    case "mark-done":
+        markDone(args);
+        break;
+    default:
+        console.log("Did not enter a valid command");
+        process.exit(1);
 }
-
-
-
-
-
-
