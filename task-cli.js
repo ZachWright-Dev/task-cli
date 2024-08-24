@@ -66,7 +66,7 @@ const readTasks = () => {
 }
 
 const writeTasks = (tasks) => {
-    
+    fs.writeFileSync(path, JSON.stringify(tasks, null, 2), 'utf-8')
 }
 
 //Create a file if it does not exist
