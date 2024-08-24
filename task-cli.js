@@ -98,6 +98,58 @@ const updateTask = (args) => {
     console.log(`Updated task with ID:${id}`)
 }
 
+const markProgess = (args) => {
+    if (args.length !== 2 || !Number.isInteger(parseInt(args[1], 10))){
+        console.log(args)
+        console.log("Invalid usage of mark-in-progess Function");
+        process.exit(1);
+    }
+
+    const id = parseInt(args[1])
+    const tasks = readTasks();
+    const newTasks = tasks.map((task) => {
+        return task.id === id ? {...task, status:"in progress"} : task;
+    })
+
+    writeTasks(newTasks);
+    console.log(`Updated the status to "in progress" for ID:${id}`);
+}
+
+const markDone = (args) => {
+    if (args.length !== 2 || !Number.isInteger(parseInt(args[1], 10))){
+        console.log(args)
+        console.log("Invalid usage of mark-done Function");
+        process.exit(1);
+    }
+
+    const id = parseInt(args[1])
+    const tasks = readTasks();
+    const newTasks = tasks.map((task) => {
+        return task.id === id ? {...task, status:"done"} : task;
+    })
+
+    writeTasks(newTasks);
+    console.log(`Updated the status to "done" for ID:${id}`);
+}
+
+const listDone = () => {
+    const tasks = readTasks();
+    const displayTasks = tasks.filter(task => task.status === "done");
+    console.log(displayTasks);
+}
+
+const listToDo = () => {
+    const tasks = readTasks();
+    const displayTasks = tasks.filter(task => task.status === "todo");
+    console.log(displayTasks);
+}
+
+const listInProgress = () => {
+    const tasks = readTasks();
+    const displayTasks = tasks.filter(task => task.status === "in progress");
+    console.log(displayTasks);
+}
+
 const readTasks = () => {
     //Returns a string of json file
     const stringData = fs.readFileSync(path, 'utf-8');
@@ -134,6 +186,15 @@ switch(args[0].toLowerCase()) {
         break;
     case "mark-done":
         markDone(args);
+        break;
+    case "list-done":
+        listDone();
+        break;
+    case "list-todo":
+        listToDo();
+        break;
+    case "list-in-progress":
+        listInProgress();
         break;
     default:
         console.log("Did not enter a valid command");
