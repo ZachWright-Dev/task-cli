@@ -40,7 +40,7 @@ const addTask = (args) => {
     })
 
 
-     let newID;
+    let newID;
     //Janky logic to remove possibility of duplicate ID's
     if (tasks.length === 0){
         newID = 1
