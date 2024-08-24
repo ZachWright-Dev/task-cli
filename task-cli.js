@@ -5,7 +5,7 @@ const fs = require('fs');
 const args = process.argv.slice(2); 
 const path = "./tasks.json"
 
-validArgs = ["add"]
+validArgs = ["add", "delete"]
 const validateArgs = (args) => {
     //Check if the arguments array exists and that it is populated by the user
     if (!args || args.length === 0){
@@ -39,8 +39,17 @@ const addTask = (args) => {
         year: 'numeric'
     })
 
+
+     let newID;
+    //Janky logic to remove possibility of duplicate ID's
+    if (tasks.length === 0){
+        newID = 1
+    } else {
+        newID = tasks[tasks.length - 1].id + 1
+    }
+
     const newTask = {
-        id: tasks.length + 1,
+        id: newID,
         description: args[1],
         status: "todo",
         createdAt: newDate,
@@ -54,6 +63,25 @@ const addTask = (args) => {
     writeTasks(tasks);
 
     console.log(`Task added successfully ID:${tasks.length}`)
+}
+
+const deleteTask = (args) => {
+    if (args.length !== 2 || !Number.isInteger(parseInt(args[1], 10))) {
+        console.log("Second argument was not an integer!")
+        process.exit(1);
+    }
+
+    //Get the array of javascript objects
+    tasks = readTasks();
+
+    const id = parseInt(args[1])
+
+    const newTasks = tasks.filter((task) => {
+        return task.id !== id
+    });
+
+    writeTasks(newTasks);
+
 }
 
 const readTasks = () => {
@@ -80,7 +108,8 @@ switch(args[0].toLowerCase()) {
         addTask(args);
         break;
     case "delete":
-        console.log("Ran the delete function");
+        console.log("Ran the update function")
+        deleteTask(args);
         break;
     default:
         console.log("Did nothing here ");
